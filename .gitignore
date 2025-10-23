@@ -3,6 +3,11 @@ build/
 build-*/
 .build/
 
+# Output directories
+output/bin/
+output/lib/
+!output/.gitkeep
+
 # CMake generated files
 CMakeFiles/
 CMakeCache.txt
