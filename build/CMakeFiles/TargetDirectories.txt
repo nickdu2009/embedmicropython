@@ -1,0 +1,9 @@
+/Users/duxiaobo/workspaces/axinan/temp/embedmicropython/build/CMakeFiles/micropython_engine.dir
+/Users/duxiaobo/workspaces/axinan/temp/embedmicropython/build/CMakeFiles/basic_example.dir
+/Users/duxiaobo/workspaces/axinan/temp/embedmicropython/build/CMakeFiles/file_example.dir
+/Users/duxiaobo/workspaces/axinan/temp/embedmicropython/build/CMakeFiles/edit_cache.dir
+/Users/duxiaobo/workspaces/axinan/temp/embedmicropython/build/CMakeFiles/rebuild_cache.dir
+/Users/duxiaobo/workspaces/axinan/temp/embedmicropython/build/CMakeFiles/list_install_components.dir
+/Users/duxiaobo/workspaces/axinan/temp/embedmicropython/build/CMakeFiles/install.dir
+/Users/duxiaobo/workspaces/axinan/temp/embedmicropython/build/CMakeFiles/install/local.dir
+/Users/duxiaobo/workspaces/axinan/temp/embedmicropython/build/CMakeFiles/install/strip.dir
