@@ -9,15 +9,27 @@ embedmicropython/
 ├── include/                    # 头文件
 │   └── micropython_engine.h   # MicroPython 引擎接口
 ├── src/                        # 源文件
-│   └── micropython_engine.cpp # MicroPython 引擎实现
+│   ├── micropython_engine.cpp # MicroPython 引擎实现
+│   ├── micropython_stubs.c    # MicroPython 存根实现
+│   └── micropython_embed_stub.h # 存根头文件
 ├── examples/                   # 示例代码
 │   ├── basic_example.cpp       # 基础使用示例
 │   ├── file_example.cpp        # 文件执行示例
 │   └── test_script.py          # 测试 Python 脚本
+├── micropython_config/         # MicroPython 配置文件
+│   ├── mpconfigport.h          # 端口配置
+│   └── help_text.c             # 帮助文本
+├── scripts/                    # 辅助脚本
+│   └── setup_dependencies.sh  # 依赖设置脚本
+├── external/                   # 外部依赖和构建产物
+│   ├── build/                  # 构建输出目录
+│   ├── micropython/            # MicroPython 源码
+│   └── micropython_embed/      # MicroPython 嵌入库
 ├── CMakeLists.txt              # CMake 构建配置
 ├── Makefile                    # 简化构建命令
 ├── README.md                   # 项目文档
-└── micropython_cpp_integration_plan.md  # 功能规划文档
+├── REAL_MICROPYTHON_INTEGRATION.md # 真实集成指南
+└── micropython_cpp_integration_plan.md # 功能规划文档
 ```
 
 ## 功能特性
@@ -77,13 +89,25 @@ struct MicroPythonConfig {
 
 ### 构建项目
 
+#### 快速开始
+```bash
+# 1. 设置依赖（首次运行）
+./scripts/setup_dependencies.sh
+
+# 2. 构建项目（存根模式）
+make build
+
+# 3. 运行示例
+make run-all
+```
+
 #### 使用 Makefile（推荐）
 ```bash
 # 构建项目（存根模式）
 make build
 
 # 构建真实 MicroPython 集成
-make clean && cmake -DUSE_REAL_MICROPYTHON=ON -B build && make -C build
+make clean && cmake -DUSE_REAL_MICROPYTHON=ON -B external/build && make -C external/build
 
 # 调试模式构建
 make debug
@@ -96,13 +120,16 @@ make run-all
 
 # 清理构建
 make clean
+
+# 清理所有外部依赖
+make clean-all
 ```
 
 #### 使用 CMake
 ```bash
-mkdir build
-cd build
-cmake ..
+mkdir external/build
+cd external/build
+cmake ../..
 make
 ```
 
@@ -110,12 +137,12 @@ make
 
 #### 基础示例
 ```bash
-./build/basic_example
+./external/build/basic_example
 ```
 
 #### 文件执行示例
 ```bash
-./build/file_example
+./external/build/file_example
 ```
 
 ## 使用示例
@@ -209,10 +236,10 @@ engine.collectGarbage();
 
 ```bash
 # 存根模式（默认，用于演示）
-cmake -DUSE_REAL_MICROPYTHON=OFF -B build
+cmake -DUSE_REAL_MICROPYTHON=OFF -B external/build
 
 # 真实集成模式（需要完整 MicroPython 源码）
-cmake -DUSE_REAL_MICROPYTHON=ON -B build
+cmake -DUSE_REAL_MICROPYTHON=ON -B external/build
 ```
 
 ### 详细集成指南

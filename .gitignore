@@ -1,14 +1,12 @@
-# Build directories
+# External dependencies and build artifacts directory
+external/
+
+# Build directories (if created outside external/)
 build/
 build-*/
 .build/
 
-# Output directories
-output/bin/
-output/lib/
-!output/.gitkeep
-
-# CMake generated files
+# CMake generated files (if created outside external/)
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
@@ -60,9 +58,7 @@ Thumbs.db
 *.bak
 *.backup
 
-# MicroPython specific
-micropython/
-micropython_embed/
+# Python cache files
 *.pyc
 __pycache__/
 

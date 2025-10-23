@@ -10,23 +10,6 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-# Set unified output directories
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/output/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/output/lib)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/output/lib)
-
-# Create output directories
-file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-file(MAKE_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
-
-# Set output directories for different configurations
-foreach(CONFIG ${CMAKE_CONFIGURATION_TYPES})
-    string(TOUPPER ${CONFIG} CONFIG_UPPER)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONFIG_UPPER} ${CMAKE_SOURCE_DIR}/output/bin)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONFIG_UPPER} ${CMAKE_SOURCE_DIR}/output/lib)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${CONFIG_UPPER} ${CMAKE_SOURCE_DIR}/output/lib)
-endforeach()
-
 # Compiler flags
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
@@ -114,12 +97,12 @@ if(USE_REAL_MICROPYTHON)
     message(STATUS "Using real MicroPython implementation")
     
     # Check if MicroPython embed directory exists
-    if(NOT EXISTS ${CMAKE_SOURCE_DIR}/micropython_embed)
-        message(FATAL_ERROR "MicroPython embed directory not found. Please run: cd micropython/examples/embedding && make -f micropython_embed.mk")
+    if(NOT EXISTS ${CMAKE_SOURCE_DIR}/external/micropython_embed)
+        message(FATAL_ERROR "MicroPython embed directory not found. Please run: cd external/micropython/examples/embedding && make -f micropython_embed.mk")
     endif()
     
     # Add MicroPython include directories
-    set(MICROPYTHON_EMBED_DIR ${CMAKE_SOURCE_DIR}/micropython_embed)
+    set(MICROPYTHON_EMBED_DIR ${CMAKE_SOURCE_DIR}/external/micropython_embed)
     
     target_include_directories(micropython_engine PRIVATE
         ${MICROPYTHON_EMBED_DIR}
