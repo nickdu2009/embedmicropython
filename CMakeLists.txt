@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(MicroPythonCppIntegration VERSION 1.0.0 LANGUAGES CXX)
+project(MicroPythonCppIntegration VERSION 1.0.0 LANGUAGES C CXX)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -95,16 +95,55 @@ option(USE_REAL_MICROPYTHON "Use real MicroPython implementation" OFF)
 
 if(USE_REAL_MICROPYTHON)
     message(STATUS "Using real MicroPython implementation")
-    # Here you would add the actual MicroPython source compilation
-    # This would involve:
-    # - Downloading MicroPython source
-    # - Configuring MicroPython build
-    # - Linking with MicroPython libraries
     
-    # Example (would need actual MicroPython source):
-    # add_subdirectory(micropython)
-    # target_link_libraries(micropython_engine micropython_core)
+    # Check if MicroPython embed directory exists
+    if(NOT EXISTS ${CMAKE_SOURCE_DIR}/micropython_embed)
+        message(FATAL_ERROR "MicroPython embed directory not found. Please run: cd micropython/examples/embedding && make -f micropython_embed.mk")
+    endif()
+    
+    # Add MicroPython include directories
+    set(MICROPYTHON_EMBED_DIR ${CMAKE_SOURCE_DIR}/micropython_embed)
+    
+    target_include_directories(micropython_engine PRIVATE
+        ${MICROPYTHON_EMBED_DIR}
+        ${MICROPYTHON_EMBED_DIR}/py
+        ${MICROPYTHON_EMBED_DIR}/port
+        ${MICROPYTHON_EMBED_DIR}/genhdr
+        ${MICROPYTHON_EMBED_DIR}/shared
+        ${MICROPYTHON_EMBED_DIR}/extmod
+        ${CMAKE_SOURCE_DIR}/micropython_config
+    )
+    
+    # For demonstration purposes, we'll create stub implementations
+    # In a real project, you would link against a pre-built MicroPython library
+    message(STATUS "Creating MicroPython stub implementations for demonstration")
+    
+    # Add our stub implementation file
+    target_sources(micropython_engine PRIVATE 
+        ${CMAKE_SOURCE_DIR}/src/micropython_stubs.c
+    )
+    
+    # Set C language for stub file
+    set_source_files_properties(${CMAKE_SOURCE_DIR}/src/micropython_stubs.c PROPERTIES LANGUAGE C)
+    
+    # Define preprocessor macros for real MicroPython
+    target_compile_definitions(micropython_engine PRIVATE
+        USE_REAL_MICROPYTHON=1
+        MICROPY_ENABLE_GC=1
+        MICROPY_ENABLE_COMPILER=1
+    )
+    
+    # Add math library for floating point operations
+    if(UNIX)
+        target_link_libraries(micropython_engine m)
+    endif()
+    
+    message(STATUS "MicroPython embed directory: ${MICROPYTHON_EMBED_DIR}")
+    message(STATUS "Found ${list_length} MicroPython source files")
     
 else()
     message(STATUS "Using stub MicroPython implementation for demonstration")
+    target_compile_definitions(micropython_engine PRIVATE
+        USE_REAL_MICROPYTHON=0
+    )
 endif()

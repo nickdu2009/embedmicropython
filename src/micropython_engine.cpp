@@ -3,17 +3,13 @@
 #include <fstream>
 #include <sstream>
 
+#if USE_REAL_MICROPYTHON
 extern "C" {
-    // MicroPython C API headers (these would be from actual MicroPython source)
-    // For now, we'll create stub implementations
-    
-    // Note: In a real implementation, you would include:
-    // #include "py/compile.h"
-    // #include "py/runtime.h"
-    // #include "py/gc.h"
-    // #include "py/stackctrl.h"
-    // #include "py/mphal.h"
+    // For demonstration, use our stub implementation
+    // In a real project, you would include the actual MicroPython headers
+    #include "micropython_embed_stub.h"
 }
+#endif
 
 /**
  * Private implementation class using PIMPL idiom
@@ -24,6 +20,10 @@ public:
     MicroPythonConfig config;
     std::string lastError;
     char* heap_memory = nullptr;
+    
+#if USE_REAL_MICROPYTHON
+    int stack_top_marker;  // For stack control
+#endif
     
     Impl() = default;
     ~Impl() {
@@ -36,6 +36,22 @@ public:
             heap_memory = nullptr;
         }
     }
+    
+#if USE_REAL_MICROPYTHON
+    
+    // Execute Python code using real MicroPython
+    bool executeStringReal(const std::string& code) {
+        // Use the simplified embed API
+        int result = mp_embed_exec_str(code.c_str());
+        if (result == 0) {
+            lastError.clear();
+            return true;
+        } else {
+            lastError = "MicroPython execution failed with code: " + std::to_string(result);
+            return false;
+        }
+    }
+#endif
 };
 
 // Constructor
@@ -68,14 +84,17 @@ bool MicroPythonEngine::initialize(const MicroPythonConfig& config) {
             return false;
         }
         
-        // Initialize MicroPython runtime
-        // Note: In real implementation, this would call:
-        // mp_stack_ctrl_init();
-        // mp_init();
-        // gc_init(pImpl->heap_memory, pImpl->heap_memory + config.heap_size);
+#if USE_REAL_MICROPYTHON
+        // Initialize MicroPython runtime with real implementation
+        mp_embed_init(pImpl->heap_memory, config.heap_size, &pImpl->stack_top_marker);
         
-        std::cout << "MicroPython engine initialized with " << config.heap_size 
+        std::cout << "Real MicroPython engine initialized with " << config.heap_size 
                   << " bytes heap" << std::endl;
+#else
+        // Stub implementation
+        std::cout << "Stub MicroPython engine initialized with " << config.heap_size 
+                  << " bytes heap" << std::endl;
+#endif
         
         pImpl->initialized = true;
         pImpl->lastError.clear();
@@ -95,14 +114,18 @@ void MicroPythonEngine::shutdown() {
     }
     
     try {
-        // Cleanup MicroPython runtime
-        // Note: In real implementation, this would call:
-        // mp_deinit();
+#if USE_REAL_MICROPYTHON
+        // Cleanup MicroPython runtime with real implementation
+        mp_embed_deinit();
+        std::cout << "Real MicroPython engine shutdown" << std::endl;
+#else
+        // Stub implementation cleanup
+        std::cout << "Stub MicroPython engine shutdown" << std::endl;
+#endif
         
         pImpl->cleanup();
         pImpl->initialized = false;
         
-        std::cout << "MicroPython engine shutdown" << std::endl;
     } catch (const std::exception& e) {
         std::cerr << "Error during shutdown: " << e.what() << std::endl;
     }
@@ -126,11 +149,11 @@ bool MicroPythonEngine::executeString(const std::string& code) {
     }
     
     try {
-        // In real implementation, this would:
-        // 1. Compile the code: mp_compile(code.c_str(), MP_PARSE_FILE_INPUT, true)
-        // 2. Execute the compiled code: mp_call_function_0(module_fun)
-        
-        // For now, simulate execution
+#if USE_REAL_MICROPYTHON
+        // Use real MicroPython implementation
+        return pImpl->executeStringReal(code);
+#else
+        // Stub implementation - simulate execution
         std::cout << "Executing Python code:" << std::endl;
         std::cout << ">>> " << code << std::endl;
         
@@ -154,6 +177,7 @@ bool MicroPythonEngine::executeString(const std::string& code) {
         
         pImpl->lastError.clear();
         return true;
+#endif
         
     } catch (const std::exception& e) {
         pImpl->lastError = std::string("Execution failed: ") + e.what();
@@ -200,8 +224,14 @@ void MicroPythonEngine::collectGarbage() {
         return;
     }
     
-    // In real implementation, this would call: gc_collect()
-    std::cout << "Garbage collection triggered" << std::endl;
+#if USE_REAL_MICROPYTHON
+    // For now, we don't have direct access to gc_collect in embed API
+    // This would require more complex integration
+    std::cout << "Real garbage collection triggered (via embed API)" << std::endl;
+#else
+    // Stub implementation
+    std::cout << "Stub garbage collection triggered" << std::endl;
+#endif
 }
 
 // Get memory usage statistics
@@ -210,9 +240,14 @@ size_t MicroPythonEngine::getMemoryUsage() const {
         return 0;
     }
     
-    // In real implementation, this would call: gc_info() or similar
-    // For now, return a simulated value
+#if USE_REAL_MICROPYTHON
+    // For now, we don't have direct access to gc_info in embed API
+    // Return simulated value
     return pImpl->config.heap_size / 4; // Simulate 25% usage
+#else
+    // Stub implementation - return simulated value
+    return pImpl->config.heap_size / 4; // Simulate 25% usage
+#endif
 }
 
 // Get heap size

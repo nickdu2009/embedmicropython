@@ -1,2 +1,0 @@
-/usr/bin/ar qc libmicropython_engine.a CMakeFiles/micropython_engine.dir/src/micropython_engine.cpp.o
-/usr/bin/ranlib libmicropython_engine.a

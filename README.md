@@ -79,8 +79,11 @@ struct MicroPythonConfig {
 
 #### 使用 Makefile（推荐）
 ```bash
-# 构建项目
+# 构建项目（存根模式）
 make build
+
+# 构建真实 MicroPython 集成
+make clean && cmake -DUSE_REAL_MICROPYTHON=ON -B build && make -C build
 
 # 调试模式构建
 make debug
@@ -175,12 +178,14 @@ engine.collectGarbage();
 
 ### ✅ 已完成的功能
 - 核心引擎集成框架
-- 基础数据类型处理
-- 脚本执行机制
+- 真实 MicroPython API 集成架构
+- 脚本执行机制（支持真实和存根模式）
 - 错误处理和异常管理
 - 内存管理配置
 - 完整的示例代码
-- 构建系统配置
+- 构建系统配置（支持 `USE_REAL_MICROPYTHON` 选项）
+- MicroPython 源码下载和配置
+- 演示存根实现
 
 ### 🔄 下一步开发计划
 根据 `micropython_cpp_integration_plan.md` 中的规划：
@@ -192,19 +197,32 @@ engine.collectGarbage();
 5. **调试支持**：断点调试、变量监控
 6. **安全机制**：沙箱环境、资源限制
 
-## 注意事项
+## 真实 MicroPython 集成
 
-### 当前限制
-- 这是一个演示版本，使用模拟的 MicroPython 实现
-- 要使用真实的 MicroPython，需要设置 `USE_REAL_MICROPYTHON=ON`
-- 某些高级功能需要实际的 MicroPython 源码集成
+### 当前状态
+- ✅ **集成架构完成**：支持真实 MicroPython API 的完整架构
+- ✅ **演示实现**：使用存根实现展示集成效果
+- ✅ **源码准备**：MicroPython 源码已下载并配置
+- 🔄 **完整集成**：需要替换存根为真实实现
 
-### 真实 MicroPython 集成
-要集成真实的 MicroPython：
+### 构建选项
 
-1. 下载 MicroPython 源码
-2. 配置构建选项：`cmake -DUSE_REAL_MICROPYTHON=ON ..`
-3. 修改源码以包含实际的 MicroPython API 调用
+```bash
+# 存根模式（默认，用于演示）
+cmake -DUSE_REAL_MICROPYTHON=OFF -B build
+
+# 真实集成模式（需要完整 MicroPython 源码）
+cmake -DUSE_REAL_MICROPYTHON=ON -B build
+```
+
+### 详细集成指南
+
+参见 `REAL_MICROPYTHON_INTEGRATION.md` 获取完整的真实 MicroPython 集成步骤。
+
+### 注意事项
+- 当前使用演示存根实现，展示了真实集成的架构
+- 真实集成需要处理 MicroPython 的复杂依赖关系
+- 建议先在存根模式下开发和测试功能
 
 ## 贡献
 
