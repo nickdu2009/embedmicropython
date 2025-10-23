@@ -1,28 +1,29 @@
-# Test Python script for MicroPython engine
-print("Running test script...")
+print('=== Python Script Execution Demo ===')
+print('Step 1: Basic arithmetic')
+result = 10 + 20
+print('10 + 20 =', result)
 
-# Basic arithmetic
-a = 5
-b = 3
-print("a + b =", a + b)
-print("a * b =", a * b)
-
-# String operations
-name = "MicroPython"
-print("Hello,", name)
-
-# Simple loop
-print("Counting to 5:")
+print('Step 2: Loop demonstration')
 for i in range(1, 6):
-    print("Count:", i)
+    print('Loop iteration:', i)
 
-# List operations
+print('Step 3: String operations')
+name = 'MicroPython'
+greeting = 'Hello, ' + name + '!'
+print(greeting)
+
+print('Step 4: List operations')
 numbers = [1, 2, 3, 4, 5]
-print("Numbers:", numbers)
-print("Sum:", sum(numbers))
+print('Numbers:', numbers)
+total = sum(numbers)
+print('Sum of numbers:', total)
 
-# Dictionary
-person = {"name": "Alice", "age": 30}
-print("Person:", person)
+print('Step 5: Function definition and call')
+def calculate_square(x):
+    return x * x
 
-print("Test script completed!")
+for num in [2, 3, 4]:
+    square = calculate_square(num)
+    print(f'{num} squared = {square}')
+
+print('=== Script execution completed ===')

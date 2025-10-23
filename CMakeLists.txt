@@ -44,6 +44,9 @@ target_link_libraries(basic_example micropython_engine)
 add_executable(file_example examples/file_example.cpp)
 target_link_libraries(file_example micropython_engine)
 
+add_executable(script_execution_example examples/script_execution_example.cpp)
+target_link_libraries(script_execution_example micropython_engine)
+
 # Install rules
 install(TARGETS micropython_engine
     EXPORT MicroPythonEngineTargets

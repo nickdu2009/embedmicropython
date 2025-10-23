@@ -40,8 +40,13 @@ run-file: build
 	@echo "Running file example..."
 	@./$(BUILD_DIR)/file_example
 
+# Run script execution example
+run-script: build
+	@echo "Running script execution example..."
+	@./$(BUILD_DIR)/script_execution_example
+
 # Run all examples
-run-all: run-basic run-file
+run-all: run-basic run-file run-script
 
 # Clean build directory
 clean:
@@ -73,6 +78,7 @@ help:
 	@echo "  release    - Build in release mode"
 	@echo "  run-basic  - Run basic example"
 	@echo "  run-file   - Run file example"
+	@echo "  run-script - Run script execution example"
 	@echo "  run-all    - Run all examples"
 	@echo "  clean      - Clean build directory"
 	@echo "  clean-all  - Clean all external dependencies and build artifacts"
